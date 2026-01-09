@@ -2,7 +2,10 @@ import { cn } from "@/lib/utils";
 
 export function Layout({ children, className }) {
   return (
-    <div className={cn("min-h-screen bg-background font-sans antialiased", className)}>
+    <div className={cn("min-h-screen bg-background font-sans antialiased relative", className)}>
+      <div className="nexus-amaztion">
+        <div className="nexus-amaztion-gradient" />
+      </div>
       {children}
     </div>
   );

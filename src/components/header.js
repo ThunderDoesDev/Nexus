@@ -6,49 +6,36 @@ export default function NexusHeader({ className }) {
         <header className={cn("w-full max-w-7xl mx-auto px-2 pt-6 pb-0 mb-0 sm:px-4 sm:pt-8", className)}>
       <div className="text-center space-y-3 py-0 mt-0" style={{marginTop: 0, paddingTop: 0}}>
         <div className="inline-block">
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-300 via-sky-300 to-emerald-300 bg-clip-text text-transparent">
-            Nexus Permissions Calculator
-          </h1>
+          <h1
+  style={{
+    fontSize: 'clamp(2.2rem, 7vw, 3.5rem)',
+    fontWeight: 800,
+    lineHeight: 1.1,
+    textAlign: 'center',
+    background: 'linear-gradient(90deg, #6ee7b7 0%, #3b82f6 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    marginBottom: '0.5rem',
+    marginTop: '1.5rem',
+  }}
+>
+  Nexus<br />Permissions<br />Calculator
+</h1>
+<p
+  style={{
+    fontSize: 'clamp(1rem, 3vw, 1.25rem)',
+    textAlign: 'center',
+    color: '#e0e7ef',
+    marginBottom: '1.5rem',
+    marginTop: '0.5rem',
+    fontWeight: 500,
+    letterSpacing: '0.01em',
+  }}
+>
+  Instantly generate Discord bot permissions and invite links.
+</p>
         </div>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Instantly generate Discord bot permissions and invite links.
-        </p>
       </div>
     </header>
 	);
-}
-import React from "react";
-import { cn } from "@/lib/utils";
-
-export default function NexusHeader({ className }) {
-  return (
-    <header className={cn("w-full max-w-7xl mx-auto px-4 pt-8 pb-0 mb-0", className)}>
-      <div className="text-center space-y-4 py-0 mt-0" style={{ marginTop: 0, paddingTop: 0 }}>
-        <div className="inline-block">
-          {/* You can choose one of the following header styles: */}
-          {/* Gradient background using Tailwind classes: */}
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-300 via-sky-300 to-emerald-300 bg-clip-text text-transparent">
-            Nexus Permissions Calculator
-          </h1>
-          {/* Or use inline style for custom gradient: */}
-          {/*
-          <h1
-            className="text-5xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent"
-            style={{
-              background: "linear-gradient(90deg, var(--nexus-primary), var(--nexus-secondary))",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text"
-            }}
-          >
-            Nexus Permissions Calculator
-          </h1>
-          */}
-        </div>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          Instantly generate Discord bot permissions and invite links.
-        </p>
-      </div>
-    </header>
-  );
 }

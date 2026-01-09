@@ -119,7 +119,7 @@ export default function PermissionsCalculator() {
       <Card className="p-6 md:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
         <div>
           <NormalLabel className="block text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300 tracking-wide">
-            Client ID
+            Client ID:
           </NormalLabel>
           <div className="flex flex-col sm:flex-row gap-3">
             <Input
@@ -170,8 +170,8 @@ export default function PermissionsCalculator() {
       </Card>
       <Card className="p-6 md:p-8 shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
         <div className="space-y-3">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex-1 text-center md:text-left">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
+            <div className="flex-1 text-center sm:text-left">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
                 Permission Categories
               </h2>
@@ -179,38 +179,40 @@ export default function PermissionsCalculator() {
                 Select the permissions you want to grant to your bot.
               </p>
             </div>
-            <Button
-              onClick={allPermissionsSelected ? clearAll : selectAll}
-              className={`h-11 px-6 rounded-lg text-sm font-semibold transition-all
-                ${allPermissionsSelected
-                  ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
-                  : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
-                }`}
-            >
-              {allPermissionsSelected ? 'Unselect All' : 'Select All'}
-            </Button>
+            <div className="w-full sm:w-auto mt-3 sm:mt-0 flex justify-center sm:block">
+              <Button
+                onClick={allPermissionsSelected ? clearAll : selectAll}
+                className={`h-11 px-6 rounded-lg text-sm font-semibold transition-all w-full sm:w-auto
+                  ${allPermissionsSelected
+                    ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
+                    : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
+                  }`}
+              >
+                {allPermissionsSelected ? 'Unselect All' : 'Select All'}
+              </Button>
+            </div>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
             {Object.entries(permissionsCategories).map(([categoryKey, category]) => {
               const allCategorySelected = category.permissions.every(permKey => selectedPermissions.includes(permKey));
               return (
                 <div key={categoryKey} className="p-6 md:p-7 shadow-lg bg-gray-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-800 hover:shadow-xl transition-all rounded-xl">
-                  <div className="flex items-center justify-between mb-5">
-                    <div className={`inline-block px-4 py-2 rounded-lg shadow-md`}>
-                      <h2 className="text-lg font-bold text-white">
-                        {category.name}
-                      </h2>
+                  <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 items-center sm:justify-between w-full">
+                    <label className="block text-base sm:text-lg font-bold text-white bg-slate-800 dark:bg-slate-900 px-4 py-2 rounded-lg shadow-md w-full sm:w-auto text-center sm:text-left">
+                      {category.name}
+                    </label>
+                    <div className="w-full sm:w-auto sm:ml-auto flex justify-center sm:justify-end">
+                      <button
+                        onClick={() => toggleCategory(category.permissions)}
+                        className={`h-10 px-4 rounded-lg text-sm font-semibold transition-all w-full sm:w-auto
+                          ${allCategorySelected
+                            ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
+                            : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
+                          }`}
+                      >
+                        {allCategorySelected ? 'Unselect All' : 'Select All'}
+                      </button>
                     </div>
-                    <button
-                      onClick={() => toggleCategory(category.permissions)}
-                      className={`h-11 px-4 rounded-lg text-sm font-semibold transition-all ${
-                        allCategorySelected
-                          ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
-                          : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
-                      }`}
-                    >
-                      {allCategorySelected ? 'Unselect All' : 'Select All'}
-                    </button>
                   </div>
                   <div className="space-y-3">
                     {category.permissions.map(permKey => {
@@ -241,7 +243,7 @@ export default function PermissionsCalculator() {
                                 </div>
                               )}
                               {permKey === 'ADMINISTRATOR' && (
-                                <div className="text-xs font-semibold text-red-600 dark:text-red-400 mt-2 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded inline-block">
+                                <div className="text-[11px] text-red-700 dark:text-red-600 mt-1">
                                   Grants all permissions and bypasses channel overwrites
                                 </div>
                               )}
