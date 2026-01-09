@@ -14,7 +14,7 @@ export default function App({ Component, pageProps }) {
         <meta httpEquiv="content-type" content="text/html; charset=UTF-8" />
         <meta property="og:title" content="Nexus Permissions Calculator" />
         <meta property="og:description" content="Calculate Discord bot permissions easily with Nexus Permissions Calculator. Generate invite links and manage scopes for your Discord bot." />
-        <meta property="og:url" content="https://yourdomain.com/" />
+        <meta property="og:url" content="https://thunderdoesdev.gg/" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="/favicon.ico" />
         <meta property="og:image:width" content="80" />
@@ -40,4 +40,5 @@ export default function App({ Component, pageProps }) {
     </>
   );
 }
+
 
