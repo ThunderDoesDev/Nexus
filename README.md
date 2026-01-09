@@ -18,8 +18,8 @@ Nexus is a web-based Discord Permissions Calculator built with Next.js. It allow
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/PermCalc.git
-    cd PermCalc
+    git clone https://github.com/ThunderDoesDev/Nexus.git
+    cd Nexus
     ```
 2. Install dependencies:
     ```bash
@@ -92,7 +92,7 @@ Nexus/
 
 ## Support
 
-For support, issues, or enhancements, please open an issue in this repository or join our discord support server.
+For support, issues or enhancements, please open an issue in this repository or join our discord support server.
 
 [Join Support Server](https://discord.gg/thunderdoesdev)
 
