@@ -124,15 +124,15 @@ export const permissionsCategories = {
 
 export function calculatePermissions(selectedPermissions) {
   return selectedPermissions.reduce((acc, key) => {
-    return acc | PERMISSIONS[key].value;
+    return acc | permissions[key].value;
   }, 0n);
 }
 
 export function parsePermissions(value) {
   const permissionValue = BigInt(value);
   const selected = [];  
-  Object.keys(PERMISSIONS).forEach(key => {
-    if ((permissionValue & PERMISSIONS[key].value) === PERMISSIONS[key].value) {
+  Object.keys(permissions).forEach(key => {
+    if ((permissionValue & permissions[key].value) === permissions[key].value) {
       selected.push(key);
     }
   });  

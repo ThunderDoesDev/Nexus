@@ -10,7 +10,7 @@ export function Layout({ children, className }) {
 
 export function Container({ children, className }) {
   return (
-    <div className={cn("container mx-auto px-4 py-8", className)}>
+    <div className={cn("container mx-auto px-4 py-8 w-full", className)}>
       {children}
     </div>
   );

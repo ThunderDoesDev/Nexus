@@ -52,7 +52,6 @@ npm start
 ```
 Nexus/
 ├── public/                # Static assets
-│   ├── favicon.ico  
 ├── src/
 │   ├── components/
 │   │   ├── footer.js
