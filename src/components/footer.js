@@ -10,6 +10,7 @@ export default function NexusFooter({ className }) {
           <div className="flex flex-col items-center md:items-start gap-1">
             <span className="text-base font-semibold text-slate-700 dark:text-slate-200">Nexus Permissions Calculator</span>
             <span className="text-xs text-slate-400">© {new Date().getFullYear()} Nexus. All rights reserved.</span>
+              <span className="text-xs text-slate-400">Not affiliated with Discord Inc.</span>
           </div>
           <div className="flex flex-col items-center md:items-end gap-1">
             <span className="flex items-center gap-2 text-sm text-slate-400">
