@@ -82,7 +82,6 @@ Nexus/
 ├── next.config.mjs        # Next.js configuration
 ├── postcss.config.mjs     # PostCSS configuration
 ├── README.md              # Project documentation
-├── .gitignore             # Git ignore file
 ```
 
 ## Usage
