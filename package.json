@@ -1,0 +1,24 @@
+{
+  "name": "nexus",
+  "version": "1.0.0",
+  "description": "Nexus is a modern Discord permissions calculator.",
+  "author": "ThunderDoesDev",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.562.0",
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "tailwind-merge": "^3.4.0",
+     "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4"
+  }
+}
