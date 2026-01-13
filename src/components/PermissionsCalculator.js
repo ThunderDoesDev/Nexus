@@ -147,8 +147,7 @@ export default function PermissionsCalculator() {
   const allPermissionsSelected = Object.keys(permissions).every(permKey => selectedPermissions.includes(permKey));
 
   return (
-  <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-8 mt-0 pt-0" style={{marginTop: 0, paddingTop: 0}}>
-    {/* Profiles Modal */}
+  <div className="w-full max-w-7xl mx-auto p-2 sm:p-4 md:px-6 md:pt-6 md:pb-0 lg:px-8 lg:pt-8 lg:pb-0 space-y-4 sm:space-y-6 md:space-y-8 mt-0 pt-0" style={{marginTop: 0, paddingTop: 0}}>
     {showProfiles && (
       <div 
         className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-2 sm:p-4" 
@@ -156,7 +155,7 @@ export default function PermissionsCalculator() {
         onClick={() => setShowProfiles(false)}
       >
         <div 
-          className="bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl shadow-2xl max-w-3xl w-full relative border-2 border-slate-300 dark:border-slate-700 max-h-[95vh] sm:max-h-[90vh] flex flex-col m-0 overflow-hidden"
+          className="bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl shadow-2xl max-w-3xl lg:max-w-4xl xl:max-w-5xl w-full relative border-2 border-slate-300 dark:border-slate-700 max-h-[95vh] sm:max-h-[90vh] md:max-h-[85vh] flex flex-col m-0 overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -177,7 +176,7 @@ export default function PermissionsCalculator() {
         </div>
       </div>
     )}
-      <Card className="p-6 md:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
+      <Card className="p-4 sm:p-5 md:p-6 lg:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
         <div>
           <NormalLabel className="block text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300 tracking-wide">
             Client ID:
@@ -229,7 +228,7 @@ export default function PermissionsCalculator() {
           )}
         </div>
       </Card>
-      <Card className="p-6 md:p-8 shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+      <Card className="p-4 sm:p-5 md:p-6 lg:p-8 shadow-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
         <div className="space-y-3">
           <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3">
             <div className="flex-1 text-center sm:text-left">
@@ -260,19 +259,19 @@ export default function PermissionsCalculator() {
               </Button>
             </div>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mt-4 auto-rows-fr">
             {Object.entries(permissionsCategories).map(([categoryKey, category]) => {
               const allCategorySelected = category.permissions.every(permKey => selectedPermissions.includes(permKey));
               return (
-                <div key={categoryKey} className="p-6 md:p-7 shadow-lg bg-gray-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-800 hover:shadow-xl transition-all rounded-xl">
-                  <div className="mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 items-center sm:justify-between w-full">
-                    <label className="block text-base sm:text-lg font-bold text-white bg-slate-800 dark:bg-slate-900 px-4 py-2 rounded-lg shadow-md w-full sm:w-auto text-center sm:text-left">
+                <div key={categoryKey} className="h-full flex flex-col p-4 sm:p-5 md:p-6 lg:p-7 shadow-lg bg-gray-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-800 hover:shadow-xl transition-all rounded-xl">
+                  <div className="mb-4 sm:mb-5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 items-center sm:justify-between w-full flex-shrink-0">
+                    <label className="block text-base sm:text-lg font-bold text-white bg-slate-800 dark:bg-slate-900 px-3 sm:px-4 py-2 rounded-lg shadow-md w-full sm:w-auto text-center sm:text-left">
                       {category.name}
                     </label>
                     <div className="w-full sm:w-auto sm:ml-auto flex justify-center sm:justify-end">
                       <button
                         onClick={() => toggleCategory(category.permissions)}
-                        className={`h-10 px-4 rounded-lg text-sm font-semibold transition-all w-full sm:w-auto
+                        className={`h-9 sm:h-10 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold transition-all w-full sm:w-auto
                           ${allCategorySelected
                             ? 'bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-800'
                             : 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-800'
@@ -282,7 +281,7 @@ export default function PermissionsCalculator() {
                       </button>
                     </div>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3 flex-1 min-h-0 overflow-y-auto">
                     {category.permissions.map(permKey => {
                       const perm = permissions[permKey];
                       if (!perm) return null;
@@ -327,7 +326,7 @@ export default function PermissionsCalculator() {
           </div>
         </div>
       </Card>
-      <Card className="p-6 md:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
+      <Card className="p-4 sm:p-5 md:p-6 lg:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex-1 text-center md:text-left">
@@ -382,25 +381,23 @@ export default function PermissionsCalculator() {
               <NormalLabel className="block text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300 tracking-wide">
                 Scopes:
               </NormalLabel>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-fr">
                 {availableScopes.map(scope => (
                   <div
                     key={scope.value}
-                    className={`p-3 rounded-lg border-2 transition-all cursor-pointer ${
+                    className={`h-full flex flex-col p-3 sm:p-4 rounded-lg border-2 transition-all cursor-pointer min-w-0 ${
                       scopes.includes(scope.value)
                         ? 'border-slate-500 bg-slate-100 dark:bg-slate-900'
                         : 'border-gray-300 dark:border-gray-600 hover:border-slate-400 dark:hover:border-slate-500'
                     }`}
                     onClick={() => toggleScope(scope.value)}
                   >
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1">
-                        <div className="font-semibold text-sm text-gray-900 dark:text-gray-100">
-                          {scope.label}
-                        </div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400">
-                          {scope.description}
-                        </div>
+                    <div className="flex flex-col h-full min-w-0">
+                      <div className="font-semibold text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-1 sm:mb-2 flex-shrink-0 break-words overflow-wrap-anywhere">
+                        {scope.label}
+                      </div>
+                      <div className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 flex-1 break-words overflow-wrap-anywhere">
+                        {scope.description}
                       </div>
                     </div>
                   </div>

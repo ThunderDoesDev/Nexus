@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 
 export default function NexusFooter({ className }) {
   return (
-    <div className="w-full max-w-7xl mx-auto p-2 md:p-4 lg:p-8">
-      <Card className={cn("p-6 md:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700", className)}>
+    <div className="w-full max-w-7xl mx-auto p-2 sm:p-4 md:px-6 md:pt-0 md:pb-6 lg:px-8 lg:pt-0 lg:pb-8">
+      <Card className={cn("w-full max-w-s md:max-w-7xl p-4 sm:p-5 md:p-6 lg:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700", className)}>
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mt-2 pt-2 border-t border-slate-700">
           <div className="flex flex-col items-center md:items-start gap-1">
             <span className="text-base font-semibold text-slate-700 dark:text-slate-200">Nexus Permissions Calculator</span>

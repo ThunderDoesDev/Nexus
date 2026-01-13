@@ -156,25 +156,27 @@ export default function PermissionProfilesCard({ onSelectProfile, selectedPermis
           scrollbarColor: '#94a3b8 rgba(0, 0, 0, 0.05)'
         }}
       >
-        <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 pb-4 auto-rows-fr">
           {Object.entries(permissionProfiles).map(([key, profile]) => (
             <Card 
               key={key}
-              className="p-3 sm:p-4 cursor-pointer hover:shadow-lg active:scale-[0.98] transition-all border-2 border-slate-300 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 active:border-blue-500 bg-gray-100 dark:bg-slate-700 touch-manipulation"
+              className="h-full flex flex-col p-3 sm:p-4 md:p-5 cursor-pointer hover:shadow-lg active:scale-[0.98] transition-all border-2 border-slate-300 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 active:border-blue-500 bg-gray-100 dark:bg-slate-700 touch-manipulation"
               onClick={() => handleProfileSelect(key)}
             >
-              <div className="flex items-start gap-2 sm:gap-3">
-                <div className="text-xl sm:text-2xl flex-shrink-0">{profile.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-gray-100 mb-1">
-                    {profile.name}
-                  </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 leading-relaxed">
-                    {profile.description}
-                  </p>
-                  <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${profile.color}`}>
-                    {profile.permissions.length} permissions
+              <div className="flex flex-col h-full gap-2 sm:gap-3">
+                <div className="flex items-start gap-2 sm:gap-3 flex-shrink-0">
+                  <div className="text-2xl sm:text-3xl md:text-4xl flex-shrink-0">{profile.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-sm sm:text-base md:text-lg text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">
+                      {profile.name}
+                    </h3>
                   </div>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3 leading-relaxed flex-1">
+                  {profile.description}
+                </p>
+                <div className={`inline-block px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-medium ${profile.color} flex-shrink-0 w-fit`}>
+                  {profile.permissions.length} permissions
                 </div>
               </div>
             </Card>
