@@ -6,8 +6,10 @@ import { Label, NormalLabel } from './ui/label';
 import { permissions, permissionsCategories, calculatePermissions } from '../lib/permissions';
 import { availableScopes } from '../lib/scopes';
 import { getInviteUrl as getInviteUrlUtil } from '../lib/getInviteUrl';
+import PermissionProfilesCard from './PermissionProfilesCard';
 
 export default function PermissionsCalculator() {
+  const [showProfiles, setShowProfiles] = useState(false);
   const [selectedPermissions, setSelectedPermissions] = useState([]);
   const [permissionValue, setPermissionValue] = useState('0');
   const [clientId, setClientId] = useState('');
@@ -28,6 +30,31 @@ export default function PermissionsCalculator() {
     setBotInfo(null);
     setError('');
   }, [clientId]);
+
+  useEffect(() => {
+    // Prevent body scroll when modal is open without adding padding
+    if (showProfiles) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.filter = 'none';
+      document.body.style.backdropFilter = 'none';
+      document.body.style.webkitBackdropFilter = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.filter = '';
+      document.body.style.backdropFilter = '';
+      document.body.style.webkitBackdropFilter = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.filter = '';
+      document.body.style.backdropFilter = '';
+      document.body.style.webkitBackdropFilter = '';
+    };
+  }, [showProfiles]);
 
   const togglePermission = (permKey) => {
     if (permKey === 'ADMINISTRATOR') {
@@ -112,10 +139,44 @@ export default function PermissionsCalculator() {
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
+
+  const handleProfileSelect = (profilePermissions) => {
+    setSelectedPermissions(profilePermissions);
+    setShowProfiles(false);
+  };
   const allPermissionsSelected = Object.keys(permissions).every(permKey => selectedPermissions.includes(permKey));
 
   return (
   <div className="w-full max-w-7xl mx-auto p-4 md:p-6 lg:p-8 space-y-8 mt-0 pt-0" style={{marginTop: 0, paddingTop: 0}}>
+    {/* Profiles Modal */}
+    {showProfiles && (
+      <div 
+        className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-2 sm:p-4" 
+        style={{position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 9999, width: '100vw', height: '100vh'}}
+        onClick={() => setShowProfiles(false)}
+      >
+        <div 
+          className="bg-white dark:bg-slate-800 rounded-lg sm:rounded-xl shadow-2xl max-w-3xl w-full relative border-2 border-slate-300 dark:border-slate-700 max-h-[95vh] sm:max-h-[90vh] flex flex-col m-0 overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            className="absolute top-2 right-2 sm:top-4 sm:right-4 w-9 h-9 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 active:bg-slate-300 dark:active:bg-slate-500 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all duration-200 shadow-md hover:shadow-lg z-10 touch-manipulation"
+            onClick={() => setShowProfiles(false)}
+            aria-label="Close"
+          >
+            <svg className="w-5 h-5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="flex-1 min-h-0 overflow-hidden flex flex-col">
+            <PermissionProfilesCard 
+              onSelectProfile={handleProfileSelect}
+              selectedPermissions={selectedPermissions}
+            />
+          </div>
+        </div>
+      </div>
+    )}
       <Card className="p-6 md:p-8 shadow-xl bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700">
         <div>
           <NormalLabel className="block text-sm font-semibold mb-3 text-gray-700 dark:text-gray-300 tracking-wide">
@@ -179,7 +240,7 @@ export default function PermissionsCalculator() {
                 Select the permissions you want to grant to your bot.
               </p>
             </div>
-            <div className="w-full sm:w-auto mt-3 sm:mt-0 flex justify-center sm:block">
+            <div className="w-full sm:w-auto mt-3 sm:mt-0 flex justify-center sm:block flex-row gap-2">
               <Button
                 onClick={allPermissionsSelected ? clearAll : selectAll}
                 className={`h-11 px-6 rounded-lg text-sm font-semibold transition-all w-full sm:w-auto
@@ -189,6 +250,13 @@ export default function PermissionsCalculator() {
                   }`}
               >
                 {allPermissionsSelected ? 'Unselect All' : 'Select All'}
+              </Button>
+              <Button
+                onClick={() => setShowProfiles(true)}
+                className="h-11 px-6 rounded-lg text-sm font-semibold transition-all w-full sm:w-auto bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-800 ml-2"
+                type="button"
+              >
+                Profiles
               </Button>
             </div>
           </div>
