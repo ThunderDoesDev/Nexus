@@ -8,7 +8,7 @@
     "dev": "next dev -p 2028",
     "build": "next build",
     "prestart": "git pull origin main",
-    "start": "next start -p 2020"
+    "start": "next start -p 2028"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
