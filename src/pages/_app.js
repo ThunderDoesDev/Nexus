@@ -1,42 +1,41 @@
 import "@/styles/globals.css";
-import Head from "next/head";
+import App from "next/app";
+import { Manrope, Space_Grotesk } from "next/font/google";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { AuthProvider } from "@/context/AuthContext";
+import { SiteUrlProvider } from "@/context/SiteUrlContext";
+import { resolveSiteUrl } from "@/lib/siteUrl";
 
-export default function App({ Component, pageProps }) {
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+export default function MyApp({ Component, pageProps, siteUrl }) {
   return (
-    <>
-      <Head>
-        <title>Nexus Permissions Calculator</title>
-        <meta name="robots" content="all" />
-        <meta name="description" content="Calculate Discord bot permissions easily with Nexus Permissions Calculator. Generate invite links and manage scopes for your Discord bot." />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="theme-color" content="#6c47ff" />
-        <meta httpEquiv="content-language" content="en" />
-        <meta httpEquiv="content-type" content="text/html; charset=UTF-8" />
-        <meta property="og:title" content="Nexus Permissions Calculator" />
-        <meta property="og:description" content="Calculate Discord bot permissions easily with Nexus Permissions Calculator. Generate invite links and manage scopes for your Discord bot." />
-        <meta property="og:url" content="https://yourdomain.com/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="/favicon.ico" />
-        <meta property="og:image:width" content="80" />
-        <meta property="og:image:height" content="80" />
-        <meta name="keywords" content="discord, bot, permissions, calculator, nexus" />
-        <meta name="author" content="ThunderDoesDev" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="twitter:title" content="Nexus Permissions Calculator" />
-        <meta name="twitter:description" content="Calculate Discord bot permissions easily with Nexus Permissions Calculator." />
-        <meta name="twitter:image" content="/favicon.ico" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="subject" content="Discord bot permissions calculator" />
-        <script type="application/ld+json">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebSite",
-            name: "Nexus Permissions Calculator",
-            description: "Calculate Discord bot permissions easily with Nexus Permissions Calculator. Generate invite links and manage scopes for your Discord bot.",
-          })}
-        </script>
-      </Head>
-      <Component {...pageProps} />
-    </>
+    <SiteUrlProvider value={siteUrl}>
+      <ThemeProvider>
+        <AuthProvider>
+          <div className={`${manrope.variable} ${spaceGrotesk.variable}`}>
+            <Component {...pageProps} />
+          </div>
+        </AuthProvider>
+      </ThemeProvider>
+    </SiteUrlProvider>
   );
 }
+
+MyApp.getInitialProps = async (appContext) => {
+  const appProps = await App.getInitialProps(appContext);
+  return {
+    ...appProps,
+    siteUrl: resolveSiteUrl(appContext.ctx?.req),
+  };
+};

@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+.next/
+
+# Secrets
+settings/config.json
+settings/presence-cache.json
+.env
+.env.*
+
+# Bot runtime
+bot/Logs/

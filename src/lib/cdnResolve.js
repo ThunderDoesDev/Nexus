@@ -1,0 +1,401 @@
+import { getBotToken } from "./botToken";
+import { buildCdnUrl, sanitizeSnowflake } from "./cdn";
+
+function botHeaders(token) {
+  return {
+    Accept: "application/json",
+    Authorization: `Bot ${token}`,
+  };
+}
+
+async function fetchJson(url, headers = { Accept: "application/json" }) {
+  const response = await fetch(url, { headers });
+  if (!response.ok) return { ok: false, status: response.status, data: null };
+  return { ok: true, status: response.status, data: await response.json() };
+}
+
+function isSnowflake(id) {
+  return /^\d{17,20}$/.test(String(id || ""));
+}
+
+function fromHash(hash) {
+  if (!hash) return { hash: "", animated: false };
+  return { hash, animated: String(hash).startsWith("a_") };
+}
+
+function requireToken(token) {
+  if (token) return null;
+  return {
+    error: "This asset requires a bot token in settings/config.json.",
+    status: 503,
+  };
+}
+
+async function fetchUser(userId, token) {
+  const missing = requireToken(token);
+  if (missing) return missing;
+
+  const result = await fetchJson(
+    `https://discord.com/api/v10/users/${userId}`,
+    botHeaders(token)
+  );
+  if (!result.ok) {
+    return {
+      error: result.status === 404 ? "User not found." : "Failed to fetch user.",
+      status: result.status || 502,
+    };
+  }
+  return { data: result.data };
+}
+
+async function fetchGuild(guildId, token) {
+  const missing = requireToken(token);
+  if (missing) return missing;
+
+  const guild = await fetchJson(
+    `https://discord.com/api/v10/guilds/${guildId}?with_counts=true`,
+    botHeaders(token)
+  );
+  if (guild.ok) return { data: guild.data };
+
+  return {
+    error:
+      guild.status === 404
+        ? "Guild not found."
+        : "Guild not found.",
+    status: guild.status || 502,
+  };
+}
+
+async function fetchApp(appId, token) {
+  const [directory, rpc] = await Promise.all([
+    fetchJson(`https://discord.com/api/v10/application-directory-static/applications/${appId}`),
+    fetchJson(`https://discord.com/api/v10/applications/${appId}/rpc`),
+  ]);
+
+  let user = null;
+  let app = null;
+  let publicApp = null;
+
+  if (token) {
+    const botId = directory.ok ? directory.data?.bot?.id : null;
+    const resolvedId = directory.ok ? directory.data?.id || appId : appId;
+    const [userRes, appRes, publicRes] = await Promise.all([
+      fetchJson(`https://discord.com/api/v10/users/${botId || appId}`, botHeaders(token)),
+      fetchJson(`https://discord.com/api/v10/applications/${resolvedId}`, botHeaders(token)),
+      fetchJson(`https://discord.com/api/v10/applications/${resolvedId}/public`, botHeaders(token)),
+    ]);
+    user = userRes.ok ? userRes.data : null;
+    app = appRes.ok ? appRes.data : null;
+    publicApp = publicRes.ok ? publicRes.data : null;
+  }
+
+  const dir = directory.ok ? directory.data : null;
+  const rpcData = rpc.ok ? rpc.data : null;
+
+  if (!dir && !rpcData && !app && !publicApp && !user) {
+    return {
+      error:
+        "Application not found via Discord API. Try a directory-listed app or set token in settings/config.json.",
+      status: 404,
+    };
+  }
+
+  return {
+    data: {
+      id: dir?.id ?? app?.id ?? publicApp?.id ?? rpcData?.id ?? appId,
+      name: dir?.name ?? app?.name ?? publicApp?.name ?? rpcData?.name ?? null,
+      icon: dir?.icon ?? app?.icon ?? publicApp?.icon ?? rpcData?.icon ?? null,
+      botAvatar: dir?.bot?.avatar ?? (user?.bot ? user.avatar : null),
+      botId: dir?.bot?.id ?? (user?.bot ? user.id : null),
+    },
+  };
+}
+
+async function fetchMember(guildId, userId, token) {
+  const missing = requireToken(token);
+  if (missing) return missing;
+
+  const result = await fetchJson(
+    `https://discord.com/api/v10/guilds/${guildId}/members/${userId}`,
+    botHeaders(token)
+  );
+  if (!result.ok) {
+    return {
+      error:
+        result.status === 404
+          ? "Member not found (bot must share the server)."
+          : "Failed to fetch member.",
+      status: result.status || 502,
+    };
+  }
+  return { data: result.data };
+}
+
+async function fetchGuildEmoji(guildId, emojiId, token) {
+  const missing = requireToken(token);
+  if (missing) return missing;
+
+  const result = await fetchJson(
+    `https://discord.com/api/v10/guilds/${guildId}/emojis/${emojiId}`,
+    botHeaders(token)
+  );
+  if (result.ok) return { data: result.data };
+
+  // Fallback: list emojis (same permission model, sometimes more reliable)
+  const list = await fetchJson(
+    `https://discord.com/api/v10/guilds/${guildId}/emojis`,
+    botHeaders(token)
+  );
+  if (list.ok && Array.isArray(list.data)) {
+    const emoji = list.data.find((e) => String(e.id) === String(emojiId));
+    if (emoji) return { data: emoji };
+  }
+
+  return {
+    error:
+      result.status === 404 || list.status === 404
+        ? "Emoji not found (bot must be in the guild)."
+        : "Failed to fetch emoji via Discord API.",
+    status: result.status || list.status || 502,
+  };
+}
+
+async function fetchRole(guildId, roleId, token) {
+  const missing = requireToken(token);
+  if (missing) return missing;
+
+  const result = await fetchJson(
+    `https://discord.com/api/v10/guilds/${guildId}/roles`,
+    botHeaders(token)
+  );
+  if (!result.ok) {
+    return {
+      error:
+        result.status === 404
+          ? "Guild not found or bot is not in that server."
+          : "Failed to fetch roles.",
+      status: result.status || 502,
+    };
+  }
+
+  const role = (result.data || []).find((r) => String(r.id) === String(roleId));
+  if (!role) return { error: "Role not found in that guild.", status: 404 };
+  return { data: role };
+}
+
+/**
+ * Resolve CDN asset fields from Discord IDs via Discord API only.
+ */
+export async function resolveCdnAsset(kindId, input = {}) {
+  const token = getBotToken();
+  const size = Number(input.size) || 256;
+
+  const userId = sanitizeSnowflake(input.userId);
+  const guildId = sanitizeSnowflake(input.guildId);
+  const appId = sanitizeSnowflake(input.appId);
+  const emojiId = sanitizeSnowflake(input.emojiId);
+  const roleId = sanitizeSnowflake(input.roleId);
+
+  if (kindId === "emoji") {
+    if (!isSnowflake(guildId)) return { error: "Enter the guild ID that owns the emoji.", status: 400 };
+    if (!isSnowflake(emojiId)) return { error: "Enter an emoji ID.", status: 400 };
+
+    const emojiResult = await fetchGuildEmoji(guildId, emojiId, token);
+    if (emojiResult.error) return emojiResult;
+
+    const emoji = emojiResult.data;
+    const animated = Boolean(emoji.animated);
+    const params = {
+      guildId,
+      emojiId: emoji.id,
+      size,
+      format: animated ? "gif" : "png",
+      animated,
+      hash: "",
+    };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl("emoji", params),
+        name: emoji.name ? `:${emoji.name}:` : `Emoji ${emoji.id}`,
+      },
+    };
+  }
+
+  if (kindId === "avatar" || kindId === "userBanner") {
+    if (!isSnowflake(userId)) return { error: "Enter a user ID.", status: 400 };
+    const userResult = await fetchUser(userId, token);
+    if (userResult.error) return userResult;
+
+    const user = userResult.data;
+    const name = user.global_name || user.username || user.id;
+
+    if (kindId === "avatar") {
+      const { hash, animated } = fromHash(user.avatar);
+      const params = { userId: user.id, hash, size, format: "", animated };
+      return {
+        data: {
+          kindId,
+          params,
+          url: buildCdnUrl("avatar", params),
+          name,
+          note: hash ? undefined : "User has no custom avatar — showing default.",
+        },
+      };
+    }
+
+    if (!user.banner) {
+      return { error: "This user has no banner.", status: 404 };
+    }
+    const { hash, animated } = fromHash(user.banner);
+    const params = { userId: user.id, hash, size: size || 512, format: "", animated };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl("userBanner", params),
+        name,
+      },
+    };
+  }
+
+  if (
+    kindId === "guildIcon" ||
+    kindId === "guildBanner" ||
+    kindId === "splash" ||
+    kindId === "discoverySplash"
+  ) {
+    if (!isSnowflake(guildId)) return { error: "Enter a guild ID.", status: 400 };
+    const guildResult = await fetchGuild(guildId, token);
+    if (guildResult.error) return guildResult;
+
+    const guild = guildResult.data;
+    const field =
+      kindId === "guildIcon"
+        ? "icon"
+        : kindId === "guildBanner"
+          ? "banner"
+          : kindId === "splash"
+            ? "splash"
+            : "discovery_splash";
+
+    const hashValue = guild[field];
+    if (!hashValue) {
+      return {
+        error: `This guild has no ${field.replace("_", " ")}.`,
+        status: 404,
+      };
+    }
+
+    const { hash, animated } = fromHash(hashValue);
+    const params = { guildId: guild.id, hash, size, format: "", animated };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl(kindId, params),
+        name: guild.name || guild.id,
+      },
+    };
+  }
+
+  if (kindId === "memberAvatar") {
+    if (!isSnowflake(guildId) || !isSnowflake(userId)) {
+      return { error: "Enter both guild ID and user ID.", status: 400 };
+    }
+    const memberResult = await fetchMember(guildId, userId, token);
+    if (memberResult.error) return memberResult;
+    const member = memberResult.data;
+
+    if (!member.avatar) {
+      const userResult = await fetchUser(userId, token);
+      if (userResult.error) {
+        return { error: "This member has no server avatar.", status: 404 };
+      }
+      const { hash, animated } = fromHash(userResult.data.avatar);
+      const params = { userId, hash, size, format: "", animated, guildId };
+      return {
+        data: {
+          kindId: "avatar",
+          params,
+          url: buildCdnUrl("avatar", params),
+          name: member.nick || userResult.data.username || userId,
+          note: "No server avatar — showing global user avatar from API.",
+        },
+      };
+    }
+
+    const { hash, animated } = fromHash(member.avatar);
+    const params = { guildId, userId, hash, size, format: "", animated };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl("memberAvatar", params),
+        name: member.nick || member.user?.username || userId,
+      },
+    };
+  }
+
+  if (kindId === "appIcon") {
+    if (!isSnowflake(appId)) return { error: "Enter an application ID.", status: 400 };
+    const appResult = await fetchApp(appId, token);
+    if (appResult.error) return appResult;
+    const app = appResult.data;
+
+    if (!app.icon && app.botAvatar && app.botId) {
+      const { hash, animated } = fromHash(app.botAvatar);
+      const params = { userId: app.botId, hash, size, format: "", animated, appId: app.id };
+      return {
+        data: {
+          kindId: "avatar",
+          params,
+          url: buildCdnUrl("avatar", params),
+          name: app.name || app.id,
+          note: "No app icon — showing bot user avatar from API.",
+        },
+      };
+    }
+    if (!app.icon) {
+      return { error: "This application has no icon.", status: 404 };
+    }
+    const { hash, animated } = fromHash(app.icon);
+    const params = { appId: app.id, hash, size, format: "", animated };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl(kindId, params),
+        name: app.name || app.id,
+      },
+    };
+  }
+
+  if (kindId === "roleIcon") {
+    if (!isSnowflake(guildId)) return { error: "Enter the guild ID that owns the role.", status: 400 };
+    if (!isSnowflake(roleId)) return { error: "Enter a role ID.", status: 400 };
+
+    const roleResult = await fetchRole(guildId, roleId, token);
+    if (roleResult.error) return roleResult;
+
+    const role = roleResult.data;
+    if (!role.icon) {
+      return { error: "This role has no icon.", status: 404 };
+    }
+
+    const { hash, animated } = fromHash(role.icon);
+    const params = { guildId, roleId: role.id, hash, size, format: "", animated };
+    return {
+      data: {
+        kindId,
+        params,
+        url: buildCdnUrl("roleIcon", params),
+        name: role.name || role.id,
+      },
+    };
+  }
+
+  return { error: "Unsupported asset type.", status: 400 };
+}

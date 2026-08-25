@@ -1,25 +1,38 @@
 {
   "name": "nexus",
   "version": "1.0.0",
-  "description": "Nexus is a modern Discord permissions calculator.",
+  "description": "Nexus is an all-in-one Discord developer toolkit.",
   "author": "ThunderDoesDev",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 2028",
+    "dev": "next dev -p 2028 && node bot/Sharding.js",
     "build": "next build",
-    "prestart": "git pull origin main",
-    "start": "next start -p 2028"
+    "start": "next start -p 2028 && node bot/Sharding.js",
+    "presence": "node scripts/presence.mjs",
+    "bot": "node bot/Bot.js",
+    "bot:shard": "node bot/Sharding.js"
   },
   "dependencies": {
+    "@discordjs/rest": "^2.6.3",
     "@radix-ui/react-slot": "^1.2.4",
+    "@tailwindcss/postcss": "^4",
+    "cfonts": "^3.3.1",
+    "chalk": "^4.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cookie": "^2.0.1",
+    "crypto": "^1.0.1",
+    "discord-api-types": "^0.38.53",
+    "discord.js": "^14.27.0",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.562.0",
+    "moment": "^2.30.1",
+    "mysql2": "^3.23.3",
     "next": "16.1.5",
+    "node-fetch": "^2.7.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0",
-     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
   }
 }
