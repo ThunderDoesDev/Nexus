@@ -1,0 +1,30 @@
+{
+    "token": "YOUR_DISCORD_BOT_TOKEN",
+    "clientId": "YOUR_DISCORD_APPLICATION_ID",
+    "clientSecret": "YOUR_DISCORD_CLIENT_SECRET",
+    "callbackUrl": "http://localhost:2028/api/auth/callback",
+    "mainScopes": "identify email guilds guilds.members.read",
+    "secret": "CHANGE_ME_TO_A_LONG_RANDOM_STRING",
+    "isProduction": false,
+    "bot": {
+        "name": "Nexus",
+        "developer": [],
+        "supportGuild": "https://discord.gg/your-invite",
+        "ourGuilds": [],
+        "embedColor": "#5865F2",
+        "maintenanceMode": false
+    },
+    "channels": {
+        "errors": "",
+        "commands": "",
+        "journal": ""
+    },
+    "database": {
+        "enabled": false,
+        "host": "localhost",
+        "port": 3306,
+        "username": "nexus",
+        "password": "YOUR_DATABASE_PASSWORD",
+        "dbName": "nexus"
+    }
+}

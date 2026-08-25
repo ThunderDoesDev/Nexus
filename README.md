@@ -27,6 +27,11 @@ Nexus is a web-based Discord Permissions Calculator built with Next.js. It allow
     # or
     yarn install
     ```
+3. Create your local config (this file is gitignored and must not be committed):
+    ```bash
+    cp settings/config.example.json settings/config.json
+    ```
+    Fill in your Discord bot token, client secret, session secret, and database credentials. Never push `settings/config.json` to GitHub.
 
 ### Running Locally
 Start the development server:
