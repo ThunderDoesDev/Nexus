@@ -2,7 +2,7 @@
 
 All-in-one Discord developer toolkit. Build permission bitfields, OAuth invites, embeds, slash commands, and more — then copy values you can paste into Discord.
 
-Live site: [nexus.thunderdoesdev.gg](https://nexus.thunderdoesdev.gg)
+Live site: [nexus.aeraxis.dev](https://nexus.aeraxis.dev)
 
 ## Features
 
@@ -68,7 +68,7 @@ Copy-Item settings/config.example.json settings/config.json
 
 In the Discord Developer Portal, add the same callback URL under **OAuth2 → Redirects**, and enable the bot intents you need.
 
-For production, set `NEXT_PUBLIC_SITE_URL` to your public origin (for example `https://nexus.thunderdoesdev.gg`).
+For production, set `NEXT_PUBLIC_SITE_URL` to your public origin (for example `https://nexus.aeraxis.dev`).
 
 ## Running locally
 

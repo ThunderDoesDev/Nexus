@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useSiteUrl } from "@/context/SiteUrlContext";
+import { DEFAULT_SITE_URL } from "@/lib/siteUrl";
 import {
   AUTHOR,
   AUTHOR_URL,
@@ -37,7 +38,7 @@ export default function Seo({
   children,
 }) {
   const contextualSiteUrl = useSiteUrl();
-  const siteUrl = contextualSiteUrl || getSiteUrl();
+  const siteUrl = contextualSiteUrl || getSiteUrl() || DEFAULT_SITE_URL;
   const fullTitle = buildTitle(title);
   const canonical = joinUrl(siteUrl, path);
   const imageUrl = image.startsWith("http") ? image : joinUrl(siteUrl, image);

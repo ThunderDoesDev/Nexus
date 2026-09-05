@@ -1,4 +1,4 @@
-import { resolveSiteUrl } from "@/lib/siteUrl";
+import { DEFAULT_SITE_URL, resolveSiteUrl } from "@/lib/siteUrl";
 
 export const SITE_NAME = "Nexus";
 export const SITE_TAGLINE = "Discord Dev Toolkit";
@@ -15,14 +15,14 @@ export const PUBLISHER_URL = "https://aeraxis.dev";
 export const DEV_TEAM_URL = PUBLISHER_URL;
 export const DISCORD_URL = "https://discord.gg/thunderdoesdev";
 export const TWITTER_HANDLE = "@thunderdoesdev";
-export const OG_IMAGE_PATH = "/logo.png";
-export const OG_IMAGE_WIDTH = 1024;
-export const OG_IMAGE_HEIGHT = 1024;
-export const OG_IMAGE_TYPE = "image/png";
+export const OG_IMAGE_PATH = "/og.jpg";
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
+export const OG_IMAGE_TYPE = "image/jpeg";
 
-/** Public site origin without trailing slash. Set NEXT_PUBLIC_SITE_URL in production. */
+/** Public site origin without trailing slash. Defaults to nexus.aeraxis.dev. */
 export function getSiteUrl() {
-  return resolveSiteUrl();
+  return resolveSiteUrl() || DEFAULT_SITE_URL;
 }
 
 export function absoluteUrl(path = "/") {
