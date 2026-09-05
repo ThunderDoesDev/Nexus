@@ -5,9 +5,9 @@
   "author": "ThunderDoesDev",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 2028 && node bot/Sharding.js",
+    "dev": "node scripts/run-with-bot.mjs dev -p 2028",
     "build": "next build",
-    "start": "next start -p 2028 && node bot/Sharding.js",
+    "start": "node scripts/run-with-bot.mjs start -p 2028",
     "presence": "node scripts/presence.mjs",
     "bot": "node bot/Bot.js",
     "bot:shard": "node bot/Sharding.js"

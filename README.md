@@ -72,21 +72,21 @@ For production, set `NEXT_PUBLIC_SITE_URL` to your public origin (for example `h
 
 ## Running locally
 
-Website (port 2028):
+Website and bot together (port 2028):
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:2028](http://localhost:2028).
+Open [http://localhost:2028](http://localhost:2028). The companion bot starts in the same command.
 
-Bot (second terminal):
+Bot only:
 
 ```bash
 npm run bot:shard
 ```
 
-Use `npm run bot` to run a single unsharded process instead.
+Use `npm run bot` to run a single unsharded process instead. Do not run those at the same time as `npm run dev` — that would start two bot processes.
 
 Production:
 
