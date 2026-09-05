@@ -1,5 +1,7 @@
 import React from "react";
 
+const DEV_TEAM_URL = "https://aeraxis.dev";
+
 const LINKS = [
   {
     href: "https://discord.gg/thunderdoesdev",
@@ -18,7 +20,18 @@ export default function NexusFooter() {
       <div className="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center gap-2.5">
         <p className="text-[10px] sm:text-[11px] text-[var(--nx-text-faint)] leading-snug text-center sm:text-left">
           <span className="text-[var(--nx-text-muted)] font-semibold">Nexus</span>
-          {" · "}© {new Date().getFullYear()} by{" "}
+          {" · "}
+          <span>Owned by</span>{" "}
+          <a
+            href={DEV_TEAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-[var(--nx-accent)] transition hover:text-[var(--nx-accent)]/80"
+          >
+            Aeraxis Development
+          </a>
+          <span className="text-[var(--nx-border-strong)]"> · </span>
+          © {new Date().getFullYear()} by{" "}
           <a
             href="https://thunderdoesdev.gg"
             target="_blank"
