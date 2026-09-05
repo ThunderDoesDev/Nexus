@@ -1,10 +1,9 @@
 import React from "react";
-
-const DEV_TEAM_URL = "https://aeraxis.dev";
+import { AUTHOR, AUTHOR_URL, DEV_TEAM_URL, DISCORD_URL, PUBLISHER } from "@/lib/seo";
 
 const LINKS = [
   {
-    href: "https://discord.gg/thunderdoesdev",
+    href: DISCORD_URL,
     label: "Discord",
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -28,17 +27,17 @@ export default function NexusFooter() {
             rel="noopener noreferrer"
             className="font-semibold text-[var(--nx-accent)] transition hover:text-[var(--nx-accent)]/80"
           >
-            Aeraxis Development
+            {PUBLISHER}
           </a>
           <span className="text-[var(--nx-border-strong)]"> · </span>
           © {new Date().getFullYear()} by{" "}
           <a
-            href="https://thunderdoesdev.gg"
+            href={AUTHOR_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="text-[var(--nx-text-muted)] font-medium hover:text-[var(--nx-accent)] transition-colors"
           >
-            ThunderDoesDev
+            {AUTHOR}
           </a>
           <span className="block sm:inline">
             <span className="hidden sm:inline"> · </span>
